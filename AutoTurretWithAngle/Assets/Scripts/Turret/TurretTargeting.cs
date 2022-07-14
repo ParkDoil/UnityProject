@@ -12,10 +12,8 @@ public class TurretTargeting : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            if(_activateZone.IsActivate == false)
-            {
-                _activateZone.CheckPlayerInActivateArea();
-            }
+            _activateZone.CheckPlayerInActivateArea();
+
             Target = other.gameObject;
         }
     }

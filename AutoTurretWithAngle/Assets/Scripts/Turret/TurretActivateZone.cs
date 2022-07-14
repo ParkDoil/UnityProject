@@ -7,6 +7,8 @@ public class TurretActivateZone : MonoBehaviour
     public bool IsActivate { get; set; }
     public Transform Target;
     public Transform MyBarrelLocation;
+    private float _maxAngle = 0.96f;
+    private float _minAngle = 0.26f;
 
     private void Start()
     {
@@ -26,8 +28,8 @@ public class TurretActivateZone : MonoBehaviour
     private bool PlayerFrontEyesight()
     {
         Vector3 distanceVector = Target.position - MyBarrelLocation.position;
-
-        if (0.5f < Vector3.Dot(MyBarrelLocation.forward, distanceVector.normalized))
+        float _dot = Vector3.Dot(MyBarrelLocation.forward, distanceVector.normalized);
+        if (_minAngle <= _dot && _maxAngle >= _dot)
         {
             return true;
         }
