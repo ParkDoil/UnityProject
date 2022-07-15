@@ -12,7 +12,7 @@ public class TurretTargeting : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            _activateZone.CheckPlayerInActivateArea();
+            _activateZone.CheckPlayerInActivateArea(other);
 
             Target = other.gameObject;
         }

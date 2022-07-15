@@ -610,7 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c097c3edf3140c49a506af1e9c9c02d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotationSpeed: 30
+  RotationSpeed: 50
   AttackCooltime: 0.7
   BulletPrefab: {fileID: 6756427901409260159, guid: 0dd4b852eeee50d4cb015f78292453d8, type: 3}
   BulletFireLocation: {fileID: 1362787767}
