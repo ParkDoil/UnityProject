@@ -1,48 +1,59 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
-// 게임 오버 상태를 표현하고, 게임 점수와 UI를 관리하는 게임 매니저
-// 씬에는 단 하나의 게임 매니저만 존재할 수 있다.
-public class GameManager : MonoBehaviour {
-    public static GameManager instance; // 싱글톤을 할당할 전역 변수
+public class GameManager : SingletonBehaviour<GameManager>
+{
+    public int ScoreIncreaseAmount = 1;
 
-    public bool isGameover = false; // 게임 오버 상태
-    public Text scoreText; // 점수를 출력할 UI 텍스트
-    public GameObject gameoverUI; // 게임 오버시 활성화 할 UI 게임 오브젝트
+    public UnityEvent<int> OnScoreChanged = new UnityEvent<int>();
+    public UnityEvent OnGameEnd = new UnityEvent();
 
-    private int score = 0; // 게임 점수
-
-    // 게임 시작과 동시에 싱글톤을 구성
-    void Awake() {
-        // 싱글톤 변수 instance가 비어있는가?
-        if (instance == null)
+    public int CurrentScore
+    {
+        get
         {
-            // instance가 비어있다면(null) 그곳에 자기 자신을 할당
-            instance = this;
+            return _currnetScore;
         }
-        else
+        set
         {
-            // instance에 이미 다른 GameManager 오브젝트가 할당되어 있는 경우
-
-            // 씬에 두개 이상의 GameManager 오브젝트가 존재한다는 의미.
-            // 싱글톤 오브젝트는 하나만 존재해야 하므로 자신의 게임 오브젝트를 파괴
-            Debug.LogWarning("씬에 두개 이상의 게임 매니저가 존재합니다!");
-            Destroy(gameObject);
+            _currnetScore = value;
+            // 프로퍼티를 만들때 value키워드를 사용 가능
+            // SetScore(int value)랑 동일
+            OnScoreChanged.Invoke(_currnetScore);
         }
     }
 
-    void Update() {
-        // 게임 오버 상태에서 게임을 재시작할 수 있게 하는 처리
+
+    private int _currnetScore = 0;
+    private bool _isEnd = false;
+
+    void Update()
+    {
+        if(_isEnd && Input.GetKeyDown(KeyCode.R))
+        {
+            reset();
+            SceneManager.LoadScene(0);
+        }
     }
 
     // 점수를 증가시키는 메서드
-    public void AddScore(int newScore) {
-        
+    public void AddScore()
+    {
+        CurrentScore += ScoreIncreaseAmount;
     }
 
     // 플레이어 캐릭터가 사망시 게임 오버를 실행하는 메서드
-    public void OnPlayerDead() {
-        
+    public void End()
+    {
+        _isEnd = true;
+        OnGameEnd.Invoke();
+    }
+
+    void reset()
+    {
+        _currnetScore = 0;
+        _isEnd = false;
     }
 }
